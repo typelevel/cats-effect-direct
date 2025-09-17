@@ -55,7 +55,7 @@ lazy val core = crossProject(JVMPlatform, JSPlatform, NativePlatform)
       "org.typelevel" %% "scalac-compat-annotation" % "0.1.4",
       "org.typelevel" %%% "cats-effect-std" % CatsEffectVersion,
       "org.typelevel" %%% "cats-effect" % CatsEffectVersion % Test,
-      "org.typelevel" %%% "cats-effect-testing-specs2" % "1.6.0" % Test
+      "org.typelevel" %%% "cats-effect-testing-specs2" % "1.7.0" % Test
     ),
     libraryDependencies ++= {
       if (tlIsScala3.value)
