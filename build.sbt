@@ -25,7 +25,7 @@ ThisBuild / developers := List(
   tlGitHubDev("baccata", "Olivier Melois")
 )
 
-ThisBuild / crossScalaVersions := Seq("2.12.21", "2.13.18", "3.3.7")
+ThisBuild / crossScalaVersions := Seq("2.12.21", "3.10.0", "3.3.7")
 
 ThisBuild / githubWorkflowBuildMatrixExclusions ++= {
   (ThisBuild / crossScalaVersions).value.filter(_.startsWith("2.")).map { scala =>
