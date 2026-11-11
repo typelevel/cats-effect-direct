@@ -2,6 +2,21 @@
 <!-- [![Latest version](https://index.scala-lang.org/typelevel/cats-effect/cats-effect/latest.svg?color=orange)](https://index.scala-lang.org/typelevel/cats-effect/cats-effect) -->
 [![Discord](https://img.shields.io/discord/632277896739946517.svg?label=&logo=discord&logoColor=ffffff&color=404244&labelColor=6A7EC2)](https://discord.gg/QNnHKHq5Ts)
 
+> [!WARNING]
+> **Coming from `cats-effect-cps`?** That was this project's name up to 0.5.0 (July 2025), when it was a macro-based transformation on top of [dotty-cps-async](https://github.com/dotty-cps-async/dotty-cps-async). Version 1.0.0 renamed it and [rewrote it](https://github.com/typelevel/cats-effect-direct/releases/tag/v1.0.0) on JDK continuations, so everything below is about cats-effect-direct 1.x, not cats-effect-cps.
+>
+> `org.typelevel::cats-effect-cps:0.5.0` depends on dotty-cps-async **0.9.21** (April 2024), which doesn't compile on Scala 3.9 and later ([#321](https://github.com/typelevel/cats-effect-direct/issues/321)) and has bugs that newer dotty-cps-async versions fix (e.g. [dotty-cps-async#144](https://github.com/dotty-cps-async/dotty-cps-async/issues/144)). Newer versions are published under a different organization (`io.github.dotty-cps-async`, not `com.github.rssh`), so adding one doesn't evict 0.9.21. Your options:
+>
+> - **Macro-based `async`/`await` on current Scala:** use dotty-cps-async's own Cats Effect support, [cps-async-connect](https://github.com/dotty-cps-async/cps-async-connect): `"io.github.dotty-cps-async" %% "cps-async-connect-cats-effect" % "1.4.0"`.
+> - **Keep cats-effect-cps 0.5.0** for now: exclude the old dotty-cps-async and add a current one:
+>   ```scala
+>   libraryDependencies ++= Seq(
+>     ("org.typelevel" %% "cats-effect-cps" % "0.5.0").exclude("com.github.rssh", "dotty-cps-async_3"),
+>     "io.github.dotty-cps-async" %% "dotty-cps-async" % "1.4.0"
+>   )
+>   ```
+> - **Move to cats-effect-direct 1.x**, described below (Java 21+, an extra JVM flag, no Scala.js).
+
 This is a prototype library defining `async`/`await` syntax for Cats Effect leveraging the `Continuation` type built into the JDK as part of Project Loom. `Continuation` has the advantage of working regardless of other syntactic context (e.g. it has no problem with higher order functions like `foreach`, `for`-comprehensions, nested functions/classes, or any other crazy thing), and so unlike macro-based transformations it should be quite reliable.
 
 However, the downsides to this are two-fold. First, this library only supports Java 21 and above. Second, you must add a special argument to any JVM invocation which uses this library. Specifically, your `java` invocation must look something like this:
